@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json()) // JSON parser takes JSON data of req and turns it into JS object attachd to req.body
+
 let notes = [
   {
     id: 1,
@@ -40,6 +42,12 @@ app.get('/api/notes/:id', (request, response) => {
     response.status(404).end()
   }
 })
+
+app.post('/api/notes', (request, response) => {
+  const note = request.body
+  console.log(note)
+  response.json(note)
+} )
 
 app.delete('/api/notes/:id', (request, response) => {
   const id = Number(request.params.id)
