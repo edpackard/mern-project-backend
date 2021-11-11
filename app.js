@@ -7,6 +7,7 @@ const logger = require("./utils/logger");
 const mongoose = require("mongoose");
 
 logger.info("Connecting to", config.MONGODB_URI);
+logger.info("NODE ENV:", process.env.NODE_ENV);
 
 mongoose
   .connect(config.MONGODB_URI)
