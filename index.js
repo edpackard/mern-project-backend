@@ -13,33 +13,16 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
-app.use(requestLogger)
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
 
-let notes = [
-  {
-    id: 1,
-    content: 'HTML is easy',
-    date: '2019-05-30T17:30:21.098Z',
-    important: true
-  },
-  {
-    id: 2,
-    content: 'Browser can only execute Javascript',
-    date: '2019-05-30T18:39:34:091Z',
-    important: false
-  },
-  {
-    id: 3,
-    content: 'GET and POST are the most important methods of HTTP',
-    date: '2019-05-30T19:20:14.298Z',
-    important: true
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id'})
   }
-]
-
-const generateId = () => {
-  const maxId = notes.length > 0 ? Math.max(...notes.map( n => n.id)) : 0
-  return maxId + 1
+  next(error)
 }
+
+app.use(requestLogger)
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World</h1>')
@@ -80,6 +63,19 @@ app.post('/api/notes', (request, response) => {
 })
 })
 
+app.put('/api/notes/:id', (request, response, next) => {
+  const body = request.body
+  const note = {
+    content: body.content,
+    important: body.important,
+  }
+  Note.findByIdAndUpdate(request.params.id, note, { new : true })
+    .then(updatedNote => {
+      response.json(updatedNote)
+    })
+    .catch(error => next(error))
+})
+
 app.delete('/api/notes/:id', (request, response) => {
   Note.findByIdAndRemove(request.params.id)
   .then(result => {
@@ -94,17 +90,9 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
-
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id'})
-  }
-  next(error)
-}
-
 app.use(errorHandler) // has to be last loaded middleware
 
 const PORT = process.env.PORT
-app.listen(PORT)
-console.log(`Server running on port ${PORT}`)
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
