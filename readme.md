@@ -32,7 +32,7 @@ PORT=3001
 To run the app:
 
 ```
-npm start
+npm run dev
 open http://localhost:3001
 ```
 
