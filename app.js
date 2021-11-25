@@ -21,6 +21,7 @@ mongoose
   });
 
 app.use(cors());
+app.use(express.static("build"));
 app.use(express.json()); // JSON parser takes JSON data of req and turns it into JS object attachd to req.body
 app.use(middleware.requestLogger);
 
