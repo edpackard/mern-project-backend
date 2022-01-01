@@ -19,7 +19,6 @@ notesRouter.get("/:id", async (request, response, next) => {
 notesRouter.post("/", async (request, response, next) => {
   const body = request.body;
   const user = await User.findById(body.userId);
-  console.log(user);
   const note = new Note({
     content: body.content,
     important: body.important || false,

@@ -49,7 +49,6 @@ describe("viewing a specific note", () => {
 
   test("fails with status code 404 if note does not exist", async () => {
     const validNonExistingId = await helper.nonExistingId();
-    console.log(validNonExistingId);
     await api.get(`/api/notes/${validNonExistingId}`).expect(404);
   });
 
@@ -85,8 +84,6 @@ describe("addition of new note", () => {
   });
 
   test("fails with status code 400 if data invalid", async () => {
-    console.log("failtest2");
-
     await User.deleteMany({});
     const passwordHash = await bcrypt.hash("sekret", 10);
     const user = new User({ username: "root", passwordHash });
