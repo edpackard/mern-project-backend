@@ -7,6 +7,7 @@ const api = supertest(app);
 
 const Note = require("../models/note");
 const User = require("../models/user");
+const usersRouter = require("../controllers/users");
 
 beforeEach(async () => {
   await Note.deleteMany({}); // clear out DB
@@ -60,9 +61,15 @@ describe("viewing a specific note", () => {
 
 describe("addition of new note", () => {
   test("succeeds with valid data", async () => {
+    await User.deleteMany({});
+    const passwordHash = await bcrypt.hash("sekret", 10);
+    const user = new User({ username: "root", passwordHash });
+    await user.save();
+
     const newNote = {
       content: "async/await simplifies making async calls",
       important: true,
+      userId: user._id.toString(),
     };
 
     await api
@@ -78,8 +85,16 @@ describe("addition of new note", () => {
   });
 
   test("fails with status code 400 if data invalid", async () => {
+    console.log("failtest2");
+
+    await User.deleteMany({});
+    const passwordHash = await bcrypt.hash("sekret", 10);
+    const user = new User({ username: "root", passwordHash });
+    await user.save();
+
     const newNote = {
       important: true,
+      userId: user._id.toString(),
     };
 
     await api.post("/api/notes").send(newNote).expect(400);
