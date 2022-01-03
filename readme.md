@@ -46,4 +46,7 @@ npm test
 
 ## Notes
 
-`requests` directory: contains API route requests using REST extension for VS code, allowing for simple API endpoint testing. To use the create_note.rest request, first run the create_user.rest request: copy and paste the "id" returned into the userId parameter in the create_note.rest request.
+`requests` directory: contains API route requests using REST extension for VS code, allowing for simple API endpoint testing.
+
+- To use the `create_note.rest` request, first run the `create_user.rest` request and paste the "id" returned into the userId parameter in the `create_note.rest` request.
+- The `create_user.rest` request needs to be run before running the `login.rest` request.
